@@ -1,0 +1,4 @@
+.env
+words.db
+*.apkg
+__pycache__/
