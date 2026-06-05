@@ -5,7 +5,7 @@ from aiogram.filters import Command
 from aiogram.types import FSInputFile
 from dotenv import load_dotenv
 
-from database import init_db, add_word, get_unexported_words, mark_as_exported
+from database import init_db, add_word, get_unexported_words, mark_as_exported, word_exists 
 from api_client import fetch_word_data
 from anki_export import generate_deck
 
@@ -46,15 +46,21 @@ async def cmd_export(message: types.Message):
 @dp.message()
 async def process_word(message: types.Message):
     word = message.text.strip().lower()
+    user_id = message.from_user.id
     
     if len(word.split()) > 3:
         await message.answer("Будь ласка, відправляй по одному слову або короткій фразі.")
         return
 
+    # ПЕРЕВІРКА НА ДУБЛІКАТИ
+    if word_exists(user_id, word):
+        await message.answer(f"⚠️ Слово <b>{word}</b> вже є у твоєму словнику!", parse_mode="HTML")
+        return
+
     await bot.send_chat_action(message.chat.id, 'typing')
     
-    data = fetch_word_data(word)
-    
+
+    data = await fetch_word_data(word)    
     add_word(message.from_user.id, data['word'], data['translation'], data['example'], data['audio_url'])
     
     response_text = (

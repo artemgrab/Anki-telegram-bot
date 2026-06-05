@@ -1,9 +1,8 @@
 import genanki
-import random
 
 def generate_deck(words_data, filename="my_new_words.apkg"):
-    model_id = random.randrange(1 << 30, 1 << 31)
-    deck_id = random.randrange(1 << 30, 1 << 31)
+    model_id = 1845920391 
+    deck_id = 2948173921
 
     my_model = genanki.Model(
       model_id,

@@ -3,7 +3,7 @@ from googletrans import Translator
 
 translator = Translator()
 
-def fetch_word_data(word):
+async def fetch_word_data(word):
     url = f"https://api.dictionaryapi.dev/api/v2/entries/en/{word}"
     response = requests.get(url)
     

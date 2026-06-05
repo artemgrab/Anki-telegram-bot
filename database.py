@@ -17,6 +17,14 @@ def init_db():
     conn.commit()
     conn.close()
 
+def word_exists(user_id, word):
+    conn = sqlite3.connect('words.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT id FROM flashcards WHERE user_id = ? AND word = ?', (user_id, word))
+    exists = cursor.fetchone() is not None
+    conn.close()
+    return exists
+
 def add_word(user_id, word, translation, example, audio_url):
     conn = sqlite3.connect('words.db')
     cursor = conn.cursor()
