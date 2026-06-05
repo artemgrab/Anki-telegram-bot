@@ -2,7 +2,6 @@ import genanki
 import random
 
 def generate_deck(words_data, filename="my_new_words.apkg"):
-    # Створюємо унікальні ID для моделі та колоди
     model_id = random.randrange(1 << 30, 1 << 31)
     deck_id = random.randrange(1 << 30, 1 << 31)
 
@@ -24,7 +23,6 @@ def generate_deck(words_data, filename="my_new_words.apkg"):
     my_deck = genanki.Deck(deck_id, 'Telegram English Vocabulary')
 
     for word, translation, example, audio in words_data:
-        # Формуємо зворотну сторону картки
         back_content = f"<b>Переклад:</b> {translation}<br><br><b>Приклад:</b> <i>{example}</i>"
         if audio:
             back_content += f"<br><br><a href='{audio}'>🎧 Слухати вимову</a>"

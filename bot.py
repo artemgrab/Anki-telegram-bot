@@ -34,15 +34,12 @@ async def cmd_export(message: types.Message):
 
     await message.answer(f"Генерую колоду з {len(words)} слів...")
     
-    # Створюємо файл
     filename = f"anki_export_{user_id}.apkg"
     generate_deck(words, filename)
     
-    # Відправляємо файл у Telegram
     document = FSInputFile(filename)
     await bot.send_document(message.chat.id, document)
     
-    # Відмічаємо слова як експортовані і видаляємо тимчасовий файл
     mark_as_exported(user_id)
     os.remove(filename)
 
@@ -50,18 +47,14 @@ async def cmd_export(message: types.Message):
 async def process_word(message: types.Message):
     word = message.text.strip().lower()
     
-    # Відкидаємо довгі повідомлення (це точно не одне слово)
     if len(word.split()) > 3:
         await message.answer("Будь ласка, відправляй по одному слову або короткій фразі.")
         return
 
-    # Показуємо, що бот працює (typing action)
     await bot.send_chat_action(message.chat.id, 'typing')
     
-    # Отримуємо дані
     data = fetch_word_data(word)
     
-    # Зберігаємо в БД
     add_word(message.from_user.id, data['word'], data['translation'], data['example'], data['audio_url'])
     
     response_text = (
