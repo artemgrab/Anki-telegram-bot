@@ -4,6 +4,7 @@ from googletrans import Translator
 translator = Translator()
 
 async def fetch_word_data(word):
+    # Отримуємо англійські дані
     url = f"https://api.dictionaryapi.dev/api/v2/entries/en/{word}"
     response = requests.get(url)
     
@@ -18,7 +19,8 @@ async def fetch_word_data(word):
                     if 'example' in def_obj:
                         example = def_obj['example']
                         break
-                if example != "Приклад не знайдено.": break
+                if example != "Приклад не знайдено.": 
+                    break
             
             for phonetic in data.get('phonetics', []):
                 if phonetic.get('audio'):
@@ -27,9 +29,12 @@ async def fetch_word_data(word):
         except Exception as e:
             print(f"Помилка парсингу: {e}")
 
+    # Отримуємо переклад (ТУТ ОБОВ'ЯЗКОВО AWAIT)
     try:
-        translation = translator.translate(word, src='en', dest='uk').text
-    except:
+        translated_obj = await translator.translate(word, src='en', dest='uk')
+        translation = translated_obj.text
+    except Exception as e:
+        print(f"Помилка перекладу: {e}")
         translation = "Помилка перекладу"
 
     return {
